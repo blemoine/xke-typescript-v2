@@ -1,2 +1,6 @@
 *.iml
 .idea
+node_modules
+target
+js/out.js
+js/*.map

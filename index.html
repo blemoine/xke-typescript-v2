@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Arkanoid</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+    <script src="js/out.js"></script>
+</head>
+<body>
+<div class="content">
+    <canvas id="scene"></canvas>
+</div>
+
+
+<script>
+    (function () {
+        var game = new Game('scene');
+        game.render();
+    })();
+</script>
+</body>
+</html>

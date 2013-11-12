@@ -1,0 +1,13 @@
+{
+  "name": "Arkanoid",
+  "version": "0.0.1",
+  "description": "arkanoid in typescript",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "grunt-cli": "~0.1.11",
+    "grunt": "~0.4.1",
+    "grunt-ts": "~1.4.1"
+  }
+}
