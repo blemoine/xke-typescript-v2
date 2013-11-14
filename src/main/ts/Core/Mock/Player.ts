@@ -8,6 +8,6 @@ class PlayerMock implements IPlayer {
     addPoints(points:number) {
     }
 
-    displayScore() {
+    displayScore(selector:String) {
     }
 }

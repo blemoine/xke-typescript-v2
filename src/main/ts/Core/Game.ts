@@ -41,13 +41,13 @@ class Game implements Renderable {
         this.changeState(new StartState(this.drawCanvas));
 
         this.player = new PlayerClass();
-        this.player.displayScore();
+        this.player.displayScore('#score');
 
         var goToIngameState = () => {
             var ingameState = new StateModule.IngameState(this.drawCanvas, this.currentLevel);
             ingameState.level.brickDestroyedListeners.push((brick) => {
                 this.player.addPoints(brick.points);
-                this.player.displayScore();
+                this.player.displayScore('#score');
                 return true;
             });
             this.changeState(ingameState);
@@ -55,7 +55,7 @@ class Game implements Renderable {
 
         BUS.on('start', () => {
             this.player = new PlayerClass();
-            this.player.displayScore();
+            this.player.displayScore('#score');
             goToIngameState();
         });
 

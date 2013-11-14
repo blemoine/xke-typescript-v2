@@ -7,7 +7,7 @@ module Lvl {
 
     export class Level {
 
-        brickDestroyedListeners:Array<(IBrick) => boolean>  = [];
+        brickDestroyedListeners:Array<(IBrick) => boolean> = [];
 
         constructor(public bricks:IBrick[]) {
         }
@@ -41,41 +41,55 @@ module Lvl {
 
     export var levelsDescriptor:Array< () => LevelDescriptor> = Lvl.levelsDescriptor || [];
 
-    levelsDescriptor.push(() =>{
-        return {bricks: [
-            new Brick(90, 50),
-            new Brick(90 + Brick.width, 50),
-            new Brick(90, 50 + Brick.height),
-            new Brick(90 + Brick.width, 50 + Brick.height)
-        ]}
+
+    levelsDescriptor.push(() => {
+        if (typeof Brick != 'undefined') {
+            return {bricks: [
+                new Brick(90, 50),
+                new Brick(90 + Brick.width, 50),
+                new Brick(90, 50 + Brick.height),
+                new Brick(90 + Brick.width, 50 + Brick.height)
+            ]}
+        } else {
+            throw new Error('You must define Brick')
+        }
     });
 
-    levelsDescriptor.push(() =>{
-        return {bricks: [
-            new Brick(90 + Brick.width, 50),
-            new Brick(90 + Brick.width, 50 + Brick.height),
-            new Brick(90 + 2 * Brick.width, 50),
-            new Brick(90 + 2 * Brick.width, 50 + Brick.height),
-            new IndestructibleBrick(90, 50),
-            new IndestructibleBrick(90, 50 + Brick.height),
-            new IndestructibleBrick(90, 50 + Brick.height),
-            new IndestructibleBrick(90 + 3 * Brick.width, 50),
-            new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
-        ]}
+
+    levelsDescriptor.push(() => {
+        if (typeof Brick != 'undefined' && typeof IndestructibleBrick != 'undefined') {
+            return {bricks: [
+                new Brick(90 + Brick.width, 50),
+                new Brick(90 + Brick.width, 50 + Brick.height),
+                new Brick(90 + 2 * Brick.width, 50),
+                new Brick(90 + 2 * Brick.width, 50 + Brick.height),
+                new IndestructibleBrick(90, 50),
+                new IndestructibleBrick(90, 50 + Brick.height),
+                new IndestructibleBrick(90, 50 + Brick.height),
+                new IndestructibleBrick(90 + 3 * Brick.width, 50),
+                new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
+            ]}
+        } else {
+            throw new Error('You must define Brick')
+        }
     });
 
     levelsDescriptor.push(() => {
-        return {bricks: [
-            new Brick(90 + Brick.width, 50 + Brick.height),
-            new Brick(90 + 2 * Brick.width, 50),
-            new ThreeLiveBrick(90 + Brick.width, 50),
-            new ThreeLiveBrick(90 + 2 * Brick.width, 50 + Brick.height),
-            new IndestructibleBrick(90, 50),
-            new IndestructibleBrick(90, 50 + Brick.height),
-            new IndestructibleBrick(90, 50 + Brick.height),
-            new IndestructibleBrick(90 + 3 * Brick.width, 50),
-            new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
-        ]}
+        if (typeof Brick != 'undefined' && typeof IndestructibleBrick != 'undefined' && ThreeLiveBrick != 'undefined') {
+            return {bricks: [
+                new Brick(90 + Brick.width, 50 + Brick.height),
+                new Brick(90 + 2 * Brick.width, 50),
+                new ThreeLiveBrick(90 + Brick.width, 50),
+                new ThreeLiveBrick(90 + 2 * Brick.width, 50 + Brick.height),
+                new IndestructibleBrick(90, 50),
+                new IndestructibleBrick(90, 50 + Brick.height),
+                new IndestructibleBrick(90, 50 + Brick.height),
+                new IndestructibleBrick(90 + 3 * Brick.width, 50),
+                new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
+            ]}
+        } else {
+            throw new Error('You must define Brick')
+        }
     });
 
     export function createLevel(index:number):Level {
