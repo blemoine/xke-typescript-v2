@@ -1,4 +1,4 @@
-class WinState extends State {
+class WinState extends StateModule.State {
     constructor(drawCanvas:DrawCanvas) {
         super(drawCanvas);
     }
@@ -13,7 +13,7 @@ class WinState extends State {
         this.events.push({
             keyCode: DOM_VK_SPACE,
             action: function () {
-                $(document).trigger('start');
+                BUS.fire('start');
                 return false;
             }
         });

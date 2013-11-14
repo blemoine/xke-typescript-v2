@@ -1,18 +1,23 @@
 module Lvl {
 
+    declare var Brick;
+    declare var IndestructibleBrick;
+    declare var ThreeLiveBrick;
+
+
     export class Level {
 
-        brickDestroyedListeners:Array<(Brick) => boolean>  = [];
+        brickDestroyedListeners:Array<(IBrick) => boolean>  = [];
 
-        constructor(public bricks:Brick[]) {
+        constructor(public bricks:IBrick[]) {
         }
 
         finished():boolean {
             return this.bricks.filter((brick) => brick.destructible).length == 0;
         }
 
-        collidingBrick(ball:Ball):Brick {
-            return this.bricks.filter((brick) => !brick.isNotColliding(ball))[0];
+        collidingBrick(ball:Ball):IBrick {
+            return this.bricks.filter((brick) => brick.isColliding(ball))[0];
         }
 
         updateCollidingBrick(ball:Ball) {
@@ -31,22 +36,22 @@ module Lvl {
     }
 
     export interface LevelDescriptor {
-        bricks:Brick[];
+        bricks:IBrick[];
     }
 
-    export var levelsDescriptor:LevelDescriptor[] = Lvl.levelsDescriptor || [];
+    export var levelsDescriptor:Array< () => LevelDescriptor> = Lvl.levelsDescriptor || [];
 
-    levelsDescriptor.push({
-        bricks: [
+    levelsDescriptor.push(() =>{
+        return {bricks: [
             new Brick(90, 50),
             new Brick(90 + Brick.width, 50),
             new Brick(90, 50 + Brick.height),
             new Brick(90 + Brick.width, 50 + Brick.height)
-        ]
+        ]}
     });
 
-    levelsDescriptor.push({
-        bricks: [
+    levelsDescriptor.push(() =>{
+        return {bricks: [
             new Brick(90 + Brick.width, 50),
             new Brick(90 + Brick.width, 50 + Brick.height),
             new Brick(90 + 2 * Brick.width, 50),
@@ -56,11 +61,11 @@ module Lvl {
             new IndestructibleBrick(90, 50 + Brick.height),
             new IndestructibleBrick(90 + 3 * Brick.width, 50),
             new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
-        ]
+        ]}
     });
 
-    levelsDescriptor.push({
-        bricks: [
+    levelsDescriptor.push(() => {
+        return {bricks: [
             new Brick(90 + Brick.width, 50 + Brick.height),
             new Brick(90 + 2 * Brick.width, 50),
             new ThreeLiveBrick(90 + Brick.width, 50),
@@ -70,12 +75,11 @@ module Lvl {
             new IndestructibleBrick(90, 50 + Brick.height),
             new IndestructibleBrick(90 + 3 * Brick.width, 50),
             new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
-        ]
+        ]}
     });
 
-
     export function createLevel(index:number):Level {
-        var descriptor = levelsDescriptor[index];
+        var descriptor = levelsDescriptor[index]();
         return new Level(descriptor.bricks.slice(0));
     }
 

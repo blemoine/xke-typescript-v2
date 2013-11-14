@@ -7,7 +7,7 @@ module.exports = (grunt) =>
 	grunt.initConfig
 		ts:
 			dev:
-				src: ["src/**/*.ts"]
+				src: ["src/main/**/*.ts"]
 				out: 'js/out.js'
 				reference: 'src/reference.ts'
 				watch: 'src'

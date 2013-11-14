@@ -1,4 +1,4 @@
-class StartState extends State {
+class StartState extends StateModule.State {
     constructor(drawCanvas:DrawCanvas) {
         super(drawCanvas);
     }
@@ -8,7 +8,7 @@ class StartState extends State {
         this.events.push({
             keyCode: DOM_VK_SPACE,
             action: function () {
-                $(document).trigger('start');
+                BUS.fire('start');
                 return false;
             }
         });

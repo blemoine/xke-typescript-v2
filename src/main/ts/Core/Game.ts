@@ -1,10 +1,36 @@
+//Inversion de Control, en mode Arrache !
+declare var Player;
+var PlayerClass = PlayerMock;
+if (typeof Player != "undefined") {
+    PlayerClass = Player;
+}
+
+class EventBus {
+    listeners:any = {};
+
+    on(event:String, listener:() => any) {
+        if (!this.listeners[event]) {
+            this.listeners[event] = [];
+        }
+        this.listeners[event].push(listener);
+    }
+
+    fire(event) {
+        if (this.listeners[event]) {
+            this.listeners[event].forEach((listener) => listener())
+        }
+    }
+}
+
+var BUS = new EventBus();
+
 class Game implements Renderable {
-    state:State;
+    state:StateModule.State;
     width:number = 640;
     height:number = 480;
     drawCanvas:DrawCanvas;
     currentLevel:number = 0;
-    player:Player
+    player:IPlayer;
 
     constructor(public id:string) {
         var canvas = <HTMLCanvasElement>document.getElementById(this.id);
@@ -14,12 +40,11 @@ class Game implements Renderable {
         this.drawCanvas = new DrawCanvas(context, this.height, this.width);
         this.changeState(new StartState(this.drawCanvas));
 
-        this.player = new Player();
+        this.player = new PlayerClass();
         this.player.displayScore();
 
-
         var goToIngameState = () => {
-            var ingameState = new IngameState(this.drawCanvas, this.currentLevel);
+            var ingameState = new StateModule.IngameState(this.drawCanvas, this.currentLevel);
             ingameState.level.brickDestroyedListeners.push((brick) => {
                 this.player.addPoints(brick.points);
                 this.player.displayScore();
@@ -28,17 +53,17 @@ class Game implements Renderable {
             this.changeState(ingameState);
         };
 
-        $(document).on('start', () => {
-            this.player = new Player();
+        BUS.on('start', () => {
+            this.player = new PlayerClass();
             this.player.displayScore();
             goToIngameState();
         });
 
-        $(document).on('lose', () => {
+        BUS.on('lose', () => {
             this.changeState(new LoseState(this.drawCanvas));
         });
 
-        $(document).on('next', () => {
+        BUS.on('next', () => {
             ++this.currentLevel;
             if (this.currentLevel < Lvl.levelsDescriptor.length) {
                 goToIngameState();

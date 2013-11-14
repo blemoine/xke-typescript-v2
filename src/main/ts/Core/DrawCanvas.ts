@@ -33,8 +33,9 @@ class DrawCanvas {
         });
     }
 
-    private drawBrick(brick:Brick) {
-        this.context.drawImage(this.getSprite(brick.sprite), brick.x, brick.y, Brick.width, Brick.height);
+    private drawBrick(brick:IBrick) {
+        var anyBrick:any = brick;
+        this.context.drawImage(this.getSprite(brick.sprite), brick.x, brick.y, anyBrick.constructor.width, anyBrick.constructor.height);
     }
 
     getSprite(sprite:string):HTMLImageElement {

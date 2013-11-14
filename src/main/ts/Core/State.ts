@@ -1,33 +1,39 @@
-/// <reference path="jquery.d.ts" />
 var DOM_VK_SPACE = 32;
 var DOM_VK_LEFT = 37;
 var DOM_VK_RIGHT = 39;
 
-class State implements Renderable {
+//Scoping pour éviter que $ leak partout
+module StateModule {
 
-    events:KeyEventReactor[] = [];
+    declare var $;
+    export class State implements Renderable {
 
-    constructor(public drawCanvas:DrawCanvas) {
-    }
+        events:KeyEventReactor[] = [];
 
-    init() {
-        $(document).keydown((event)=> {
-            var key = event.which;
+        constructor(public drawCanvas:DrawCanvas) {
+        }
 
-            this.events.forEach((reactor) => {
-                if (key == reactor.keyCode) {
-                      reactor.action();
-                }
+        init() {
+
+            $(document).keydown((event)=> {
+                var key = event.which;
+
+                this.events.forEach((reactor) => {
+                    if (key == reactor.keyCode) {
+                        reactor.action();
+                    }
+                });
             });
-        });
+        }
+
+        destroy() {
+            $(document).off('keydown keyup');
+        }
+
+        render() {
+            this.drawCanvas.clear();
+        }
     }
 
-    destroy() {
-        $(document).off('keydown keyup');
-    }
-
-    render() {
-        this.drawCanvas.clear();
-    }
 }
 

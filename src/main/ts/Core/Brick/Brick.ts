@@ -1,22 +1,20 @@
-class Brick {
+interface IBrick {
+    sprite:string;
+    x:number;
+    y:number;
+    destructible:boolean;
+    live:number;
+    isColliding: (ball:Ball) => boolean;
+}
 
-    static width:number = 40;
-    static height:number = 30;
 
-    live:number = 1;
-    destructible:boolean = true;
-    points:number = 10;
-
-    sprite:string = 'sprite/sprite-brique.png';
-
-    constructor(public x:number, public y:number) {
+class BrickMock implements IBrick {
+    sprite:string;
+    x:number;
+    y:number;
+    destructible:boolean;
+    live:number;
+    isColliding(ball:Ball) {
+        return false;
     }
-
-    isNotColliding(ball:Ball):boolean {
-        return !(ball.x + Ball.radius > this.x &&
-            ball.x - Ball.radius < this.x + Brick.width &&
-            ball.y + Ball.radius > this.y &&
-            ball.y - Ball.radius < this.y + Brick.height);
-    }
-
 }

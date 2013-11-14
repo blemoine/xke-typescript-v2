@@ -1,4 +1,4 @@
-class LoseState extends State {
+class LoseState extends StateModule.State {
     constructor(drawCanvas:DrawCanvas) {
         super(drawCanvas);
     }
@@ -13,7 +13,7 @@ class LoseState extends State {
         this.events.push({
             keyCode: DOM_VK_SPACE,
             action: function () {
-                $(document).trigger('start');
+                BUS.fire('start');
                 return false;
             }
         });
