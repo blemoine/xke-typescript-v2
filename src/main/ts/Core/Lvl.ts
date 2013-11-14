@@ -1,9 +1,9 @@
-/// <reference path="Brick.ts" />
-/// <reference path="Ball.ts" />
-
 module Lvl {
 
     export class Level {
+
+        brickDestroyedListeners:Array<(Brick) => boolean>  = [];
+
         constructor(public bricks:Brick[]) {
         }
 
@@ -12,9 +12,7 @@ module Lvl {
         }
 
         collidingBrick(ball:Ball):Brick {
-            return this.bricks.filter((brick) => {
-                return !brick.isNotColliding(ball);
-            })[0];
+            return this.bricks.filter((brick) => !brick.isNotColliding(ball))[0];
         }
 
         updateCollidingBrick(ball:Ball) {
@@ -22,9 +20,13 @@ module Lvl {
             if (collidingBrick.destructible) {
                 collidingBrick.live = collidingBrick.live - 1;
             }
-            this.bricks = this.bricks.filter((brick) => {
-                return brick.live > 0;
+
+            var destroyedBricks = this.bricks.filter((brick) =>  brick.live <= 0);
+            this.brickDestroyedListeners.forEach((listener) => {
+                destroyedBricks.forEach((brick) => listener(brick));
             });
+
+            this.bricks = this.bricks.filter((brick) =>  brick.live > 0);
         }
     }
 
@@ -33,6 +35,44 @@ module Lvl {
     }
 
     export var levelsDescriptor:LevelDescriptor[] = Lvl.levelsDescriptor || [];
+
+    levelsDescriptor.push({
+        bricks: [
+            new Brick(90, 50),
+            new Brick(90 + Brick.width, 50),
+            new Brick(90, 50 + Brick.height),
+            new Brick(90 + Brick.width, 50 + Brick.height)
+        ]
+    });
+
+    levelsDescriptor.push({
+        bricks: [
+            new Brick(90 + Brick.width, 50),
+            new Brick(90 + Brick.width, 50 + Brick.height),
+            new Brick(90 + 2 * Brick.width, 50),
+            new Brick(90 + 2 * Brick.width, 50 + Brick.height),
+            new IndestructibleBrick(90, 50),
+            new IndestructibleBrick(90, 50 + Brick.height),
+            new IndestructibleBrick(90, 50 + Brick.height),
+            new IndestructibleBrick(90 + 3 * Brick.width, 50),
+            new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
+        ]
+    });
+
+    levelsDescriptor.push({
+        bricks: [
+            new Brick(90 + Brick.width, 50 + Brick.height),
+            new Brick(90 + 2 * Brick.width, 50),
+            new ThreeLiveBrick(90 + Brick.width, 50),
+            new ThreeLiveBrick(90 + 2 * Brick.width, 50 + Brick.height),
+            new IndestructibleBrick(90, 50),
+            new IndestructibleBrick(90, 50 + Brick.height),
+            new IndestructibleBrick(90, 50 + Brick.height),
+            new IndestructibleBrick(90 + 3 * Brick.width, 50),
+            new IndestructibleBrick(90 + 3 * Brick.width, 50 + Brick.height)
+        ]
+    });
+
 
     export function createLevel(index:number):Level {
         var descriptor = levelsDescriptor[index];

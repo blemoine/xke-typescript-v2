@@ -11,7 +11,6 @@ class State implements Renderable {
     }
 
     init() {
-
         $(document).keydown((event)=> {
             var key = event.which;
 

@@ -5,6 +5,7 @@ class Brick {
 
     live:number = 1;
     destructible:boolean = true;
+    points:number = 10;
 
     sprite:string = 'sprite/sprite-brique.png';
 
