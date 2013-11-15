@@ -130,3 +130,53 @@ test('an indestructible brick must not be destructible', function () {
     var brick = new IndestructibleBrick(20, 30);
     equal(brick.destructible, false);
 });
+
+module('Three lives brick');
+
+test('class ThreeLiveBrick must exist', function () {
+    equal(typeof ThreeLiveBrick, "function", "The class ThreeLiveBrick must be defined");
+});
+
+test('class ThreeLiveBrick must extends Brick', function () {
+    equal(ThreeLiveBrick.prototype.__proto__.constructor.toString().indexOf('function Brick'), 0);
+});
+
+test('class ThreeLiveBrick must have 3 lives', function () {
+    var brick = new ThreeLiveBrick(20, 30);
+    equal(brick.live, 3);
+});
+
+test('class ThreeLiveBrick must show sprite gold1 if 3 lives', function () {
+    var brick = new ThreeLiveBrick(20, 30);
+    equal(brick.sprite, 'sprite/gold1.png');
+});
+
+test('class ThreeLiveBrick must show sprite gold2 if 2 lives', function () {
+    var brick = new ThreeLiveBrick(20, 30);
+    brick.live = 2
+    equal(brick.sprite, 'sprite/gold2.png');
+});
+
+test('class ThreeLiveBrick must show sprite gold3 if 1 life', function () {
+    var brick = new ThreeLiveBrick(20, 30);
+    brick.live = 1
+    equal(brick.sprite, 'sprite/gold3.png');
+});
+
+module('cheat code');
+
+test('click on cheat button must add class "on" on cheat button ', function () {
+    $('#cheat').click();
+    ok($('#cheat').hasClass('on'));
+
+    Ship.width = 60;
+    $('#cheat').removeClass('on');
+});
+
+test('click on cheat button must change size of ship', function () {
+    $('#cheat').click();
+    equal(Ship.width, 150);
+
+    Ship.width = 60;
+    $('#cheat').removeClass('on');
+});

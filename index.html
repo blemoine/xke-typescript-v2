@@ -3,11 +3,11 @@
 <head>
     <title>Arkanoid</title>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
-    <script src="js/out.js"></script>
+
     <link href="css/arkanoid.css" rel="stylesheet"/>
     <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
     <link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet"/>
-    <script src="js/test.js"></script>
+
 </head>
 <body>
 <div class="tutorial">
@@ -30,11 +30,15 @@
 </div>
 
 
+<script src="js/out.js"></script>
+
 <script>
     (function () {
         var game = new Game('scene');
         game.render();
     })();
 </script>
+
+<script src="js/test.js"></script>
 </body>
 </html>
