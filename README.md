@@ -2,15 +2,32 @@ xke-typescript-v2
 =================
 
 
-TODO à présenter :
-* Duck typing d'interface
-* Type "primitif"
-* classe
-* méthode
-* getter / setter
-* visiblité (private)
-* fichier de définition, definitely Typed
-* Module
-* Générique
-* Fonctions raccourcies =>
+
+
+Plan présentation
+
+* Typescript
+* By Microsoft
+* Objectif : typage statique / super ensemble de Javascript / compatible Ecma 6
+* Fonctionnalités offerte
+   - typage type primitif (number / string / boolean / Array / any)
+   - générique
+   - typage de fonction ( () => void )
+   - orientation objet avec des classes (constructor / méthodes / visibilité)
+   - possibilité de getter/setter si compile en ecma 5
+   - interface et duck typing
+   - modules (compatibilité amd ou common js en fonction de la compilation)
+   - syntaxe ecma6 pour les fonctions (expressions)
+   - enum
+   - fichier de référence / "ambient declaration"
+
+* outillage nécessaire pour mise en place
+   - grunt
+   - visual studio
+
+
+
+* Conclusion
+  - l'avenir => un meilleur support d'ecma 6
+  - optimisation du compilateur
 
