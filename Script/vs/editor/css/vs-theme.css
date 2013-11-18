@@ -1,0 +1,48 @@
+
+.monaco-editor.vs .current-line {
+	background: none;
+	border: 2px solid #EEE;
+	box-sizing: border-box;
+}
+.monaco-editor.vs.focus .current-line {
+	border-color: #EAEAF2;	
+}
+.monaco-editor.vs .typeInfo { 
+	color: blue;
+}
+.monaco-editor.vs .typeInfo .documentation {
+    color: #A21B1B;
+}
+.monaco-editor.vs .token.delimiter					{ color: #000000; }
+.monaco-editor.vs .token.literal					{ color: #000000; }
+.monaco-editor.vs .token.delimiter.html				{ color: #383838; }
+.monaco-editor.vs .token.meta.content.html			{ color: red; }
+.monaco-editor.vs .token.meta.html					{ color: gray; }
+.monaco-editor.vs .token.tag.html					{ color: #800000; }
+.monaco-editor.vs .token.attribute.name.html		{ color: red; }
+.monaco-editor.vs .token.attribute.value.html		{ color: blue; }
+.monaco-editor.vs .token.delimiter.xml				{ color: blue; }
+.monaco-editor.vs .token.meta.content.xml			{ color: red; }
+.monaco-editor.vs .token.meta.xml					{ color: gray; }
+.monaco-editor.vs .token.tag.xml					{ color: #800000; }
+.monaco-editor.vs .token.attribute.name.xml			{ color: red; }
+.monaco-editor.vs .token.attribute.value.xml		{ color: blue; }
+.monaco-editor.vs .token.constant.php				{ color: #dd0000; }
+.monaco-editor.vs .token.block.php					{ color: green; }
+.monaco-editor.vs .token.variable.predefined.php	{ color: #ff8888; }
+.monaco-editor.vs .token.entity.ts					{ color: black; }
+.monaco-editor.vs .token.vs							{ color: #006400; }
+.monaco-editor.vs .token.comment.vs					{ color: #aeb9ae; }
+.monaco-editor.vs .token.tag.vs						{ color: #aeb9ae; }
+.monaco-editor.vs .token.attribute.name.vs			{ color: #aeb9ae; }
+.monaco-editor.vs .token.attribute.value.vs			{ color: #2c51cc; }
+.monaco-editor.vs .token.delimiter.vs				{ color: #708870; }
+.monaco-editor.vs .token.meta.java				{ color: gray; }
+.monaco-editor.vs .token.tag.jade						{ color: #800000; }
+.monaco-editor.vs .token.tag.id.jade,
+.monaco-editor.vs .token.tag.class.jade					{ color: #4F76AC; }
+.monaco-editor.vs .token.interpolation.jade 			{ color: magenta; }
+.monaco-editor.vs .token.interpolation.delimiter.jade 	{ color: magenta; }
+.monaco-editor .token.emphasis         { font-style: italic;}
+.monaco-editor .token.strong           { font-weight: bold; }
+.monaco-editor .token.header           { color: navy ;}

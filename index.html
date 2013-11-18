@@ -1,44 +1,353 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE html>
+
 <html>
 <head>
-    <title>Arkanoid</title>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
-
-    <link href="css/arkanoid.css" rel="stylesheet"/>
-    <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
-    <link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet"/>
-
+    <meta name="viewport" content="width=480" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>TypeScript - Playground</title>
+    <link rel="stylesheet" type="text/css" href="/Script/vs/editor/editor.main.css" data-name="vs/editor/editor.main" />
+    <link rel="stylesheet" type="text/css" href="/Script/vs/editor/css/vs-theme.css" />
 </head>
-<body>
-<div class="tutorial">
-    <div class="errors">
-
+<body class="playground" style="overflow-y: hidden;">
+    <div id="nav">
+        <div class="centered-container">
+            <div class="clearfix">
+                <a id="homelink" href="/" title="TypeScript">
+                    <div>TypeScript</div>
+                
+                </a>
+                <a id="tutorial-link" class="minor" href="/Tutorial" title="Learn TypeScript with a Guided Tutorial">learn</a>
+            </div>
+        </div>
     </div>
-    <div id="qunit">
+
+
+    <div id="playground-host" style="">
+        <div id="wrapper" style="padding-left: 20px; padding-right: 20px;">
+            <div style="float: left; padding-left: 50px;">
+                <span class="frame-title">TypeScript</span>
+                <select id="examples">
+                    <option value="">Select...</option>
+                    <option value="walkthrough1.ts">Walkthrough: JavaScript</option>
+                    <option value="walkthrough1.1.ts">Walkthrough: Types</option>
+                    <option value="walkthrough2.ts">Walkthrough: Classes</option>
+                    <option value="walkthrough2.1.ts">Walkthrough: Generics</option>
+                    <option value="walkthrough3.ts">Walkthrough: Modules</option>
+                    <option value="raytracer.ts">Raytracer</option>
+                    <option value="small.ts">Simple Inheritance</option>
+                </select>
+                <button id="share" class="playground-button">Share</button>
+                <span id="share-message" style="display:none;"></span>
+            </div>
+            <div style="float: right; padding-right: 50px;" id="runDiv">
+                <button id="execute" class="playground-button">Run</button>
+                <span class="frame-title">JavaScript</span>
+            </div>
+            <div style="clear: both"></div>
+            <div id="typescriptEditor" style="height: 500px; position: relative; top: 20; left: 0; border: 1px solid grey;"></div>
+            <div id="javascriptEditor" style="height: 500px; position: relative; top: -502px; border: 1px solid grey;"></div>
+            <div style="clear: both"></div>
+        </div>
     </div>
-    <div id="qunit-fixture">
-        <div id="mockScoreHolder"></div>
-    </div>
-</div>
 
-<div class="content">
-    <div id="score">0</div>
-    <div>
-        <button id="cheat">CHEAT MODE</button>
-    </div>
-    <canvas id="scene"></canvas>
-</div>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        var startTime = (new Date()).getTime();
+    </script>
+<!--    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.4.1.min.js"></script>-->
+    <!--
+        <script src='..\..\bin\strada.js'></script>
+        <script src="Script/site.js"></script>
+    -->
+    <script type="text/javascript">
+        var require = {
+            baseUrl: "/Script"
+        };
+    </script>
+    <script type="text/javascript" src="/Script/vs/loader.js"></script>
+    <!-- Experiment with commenting out the following scripts & how it affects load time -->
+    <!-- A. -->
+    <script type="text/javascript" src="/Script/vs/editor/editor.main.nls.js"></script>
+    <script type="text/javascript" src="/Script/vs/editor/editor.main.js"></script>
 
+    <!-- B. -->
+    <!--    <script type="text/javascript" src="/Script/vs/languages/typescript/typescript.js"></script>-->
 
-<script src="js/out.js"></script>
+    <!-- C. -->
+    <!--    <script type="text/javascript" src="/Script/vs/languages/javascript/javascript.js"></script>-->
 
-<script>
-    (function () {
-        var game = new Game('scene');
-        game.render();
-    })();
-</script>
+    <script type="text/javascript">
 
-<script src="js/test.js"></script>
+        (function () {
+            'use strict';
+
+            var examples = document.getElementById('examples');
+            var wrapper = document.getElementById('wrapper');
+
+            var lhs = {
+                domNode: document.getElementById('typescriptEditor'),
+                editor: null
+            };
+
+            var rhs = {
+                domNode: document.getElementById('javascriptEditor'),
+                editor: null
+            };
+
+            var IDLE_STATE = 0,
+                EDITORS_RENDERED = 1,
+                SAMPLE_RENDERED = 2,
+                SAMPLE_COLORED = 3,
+                SAMPLE_COMPILED = 4,
+                FINISHED = 5,
+                state = IDLE_STATE;
+
+            // ------------ Loading logic
+            (function () {
+                var DEFAULT_EXAMPLE = '/examples/walkthrough2.ts';
+
+                var editorLoaded = false, typescriptModeLoaded = false, javascriptModeLoaded = false, sampleLoaded = false;
+                var typescriptMode = null, javascriptMode = null, sample = '';
+
+                require(['vs/editor/editor.main', 'vs/nls!vs/editor/editor.main', 'vs/css!vs/editor/editor.main'], function () {
+                    editorLoaded = true;
+
+                    Monaco.Editor.getOrCreateMode('text/typescript').then(function (mode) {
+                        typescriptModeLoaded = true;
+                        typescriptMode = mode;
+                        onSomethingLoaded();
+                    });
+
+                    Monaco.Editor.getOrCreateMode('text/javascript').then(function (mode) {
+                        javascriptModeLoaded = true;
+                        javascriptMode = mode;
+                        onSomethingLoaded();
+                    });
+
+                    onSomethingLoaded();
+                });
+
+                (function () {
+                    var queryStringSrcStart = window.location.hash.indexOf("#src=");
+                    var localStorageStart = window.localStorage && window.localStorage["src"];
+                    if (queryStringSrcStart == 0) {
+                        var encoded = window.location.hash.substring("#src=".length);
+                        try {
+                            sample = decodeURIComponent(encoded);
+                            sampleLoaded = true;
+                            onSomethingLoaded();
+                            return;
+                        } catch (e) {
+                            console.log("unable to parse #src= uri component");
+                            // intentionally fall through to alternatives if decode fails
+                        }
+                    }
+                    if (localStorageStart) {
+                        sampleLoaded = true;
+                        sample = localStorageStart;
+                        onSomethingLoaded();
+                    } else {
+                        examples.selectedIndex = 3;
+                        WinJS.xhr({ url: DEFAULT_EXAMPLE }).then(function (xmlHttpReq) {
+                            sampleLoaded = true;
+                            sample = xmlHttpReq.responseText;
+                            onSomethingLoaded();
+                        });
+                    }
+                })();
+
+                function onSomethingLoaded() {
+                    if (state === IDLE_STATE && editorLoaded) {
+                        lhs.editor = Monaco.Editor.create(lhs.domNode, {
+                            value: '',
+                            mode: 'text/plain',
+                            fontIsMonospace: true,
+                            suggestOnTriggerCharacters: true,
+                            showTypeScriptWarnings: false
+                        });
+                        rhs.editor = Monaco.Editor.create(rhs.domNode, {
+                            value: '',
+                            mode: 'text/plain',
+                            fontIsMonospace: true,
+                            readOnly: true
+                        });
+                        state = EDITORS_RENDERED;
+                        console.info('editors rendered @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                    }
+                    if (state === EDITORS_RENDERED && sampleLoaded) {
+                        lhs.editor.getModel().setValue(sample);
+                        state = SAMPLE_RENDERED;
+                        console.info('sample rendered @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                    }
+                    if (state === SAMPLE_RENDERED && typescriptModeLoaded) {
+                        lhs.editor.getModel().setValue(lhs.editor.getModel().getValue(), typescriptMode);
+                        console.info('sample colored @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                        console.info('starting compilation @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                        triggerCompile();
+                        lhs.editor.addListener("change", function () {
+                            triggerCompile();
+                        });
+                        state = SAMPLE_COMPILED;
+                        console.info('sample compiled @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                    }
+                    if (state === SAMPLE_COMPILED && javascriptModeLoaded) {
+                        rhs.editor.getModel().setValue(rhs.editor.getModel().getValue(), javascriptMode);
+                        state = FINISHED;
+                        console.info('sample compiled & colored @ ' + ((new Date()).getTime() - startTime) + 'ms');
+                    }
+                }
+            })();
+
+            // ------------ Resize logic
+            function resize() {
+                // incorporate header and footer and adaptive layout
+                var headerSize = 0; // 120
+                var footerSize = 51;
+
+                var horizontalSpace = 10;
+                var wrapperSizeDiff = headerSize + footerSize;
+                var windowHeight = window.innerHeight || document.body.offsetHeight || document.documentElement.offsetHeight; 
+                
+                wrapper.style.height = (windowHeight - wrapper.offsetTop - wrapperSizeDiff) + "px";
+                var halfWidth = Math.floor((wrapper.clientWidth - 40) / 2) - 8;
+                halfWidth -= (horizontalSpace / 2);
+
+                // Layout lhs
+                var lhsSizeDiff = wrapperSizeDiff + 40;
+                lhs.domNode.style.width = halfWidth + "px";
+                lhs.domNode.style.height = (windowHeight - wrapper.offsetTop - lhsSizeDiff) + "px";
+                if (lhs.editor) {
+                    lhs.editor.layout();
+                }
+
+                // Layout rhs
+                var rhsSizeDiff = wrapperSizeDiff + 40;
+                rhs.domNode.style.left = (halfWidth + 2 + horizontalSpace) + "px";
+                rhs.domNode.style.width = halfWidth + "px";
+                rhs.domNode.style.height = (windowHeight - wrapper.offsetTop - rhsSizeDiff) + "px";
+                rhs.domNode.style.top = -(wrapper.clientHeight - 38) + "px";
+                if (rhs.editor) {
+                    rhs.editor.layout();
+                }
+            }
+            resize();
+            window.onresize = resize;
+
+            // ------------ Compilation logic
+            var compilerTriggerTimeoutID = null;
+            var triggerCompile = function () {
+                if (compilerTriggerTimeoutID !== null) {
+                    window.clearTimeout(compilerTriggerTimeoutID);
+                }
+                
+                compilerTriggerTimeoutID = window.setTimeout(function(){
+                    var viewState = rhs.editor.saveViewState();
+                    try {
+                        var model = lhs.editor.getModel(), 
+                            mode = model.getMode();
+                        mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function(output) {
+                            if (typeof output === "string") {
+                                debugger;
+                                rhs.editor.getModel().setValue(output);
+                            }
+                        }, function(err) {
+                            debugger;
+                            if(err.name === 'Canceled') {
+                                return;
+                            }
+
+                            console.error(err);
+                        });
+                    } catch (e) {
+                        console.log("Error from compilation: " + e + "  " + (e.stack || ""));
+                    }
+                    rhs.editor.restoreViewState(viewState);
+                }, 100);
+            };
+
+            // ------------ Execution logic
+            document.getElementById("execute").onclick = function () {
+                var external = window.open();
+                var script = external.window.document.createElement("script");
+                script.textContent = rhs.editor.getModel().getValue();
+                external.window.document.body.appendChild(script);
+                //external.window.eval(rhs.editor.getModel().getValue());
+            };
+
+            examples.onchange = function () {
+                var selectedExample = examples.options[examples.selectedIndex].value;
+                if (selectedExample != "") {
+                    WinJS.xhr({ url: '/examples/' + selectedExample }).then(function (xmlHttpReq) {
+                        if (state >= SAMPLE_RENDERED) {
+                            lhs.editor.getModel().setValue(xmlHttpReq.responseText);
+                        }
+                    });
+                }
+            }
+
+            var ignoreHashChange = false;
+
+            document.getElementById("share").onclick = function () {
+                if (state < SAMPLE_RENDERED)
+                    return;
+                var text = lhs.editor.getModel().getValue();
+                var encoded = encodeURIComponent(text);
+                ignoreHashChange = true;
+                window.location = "#src=" + encoded;
+
+                document.getElementById("share-message").style.display = "inline";
+                var decodedHashLength;
+                try {
+                    // this can throw when the hash gets cut off due to URI length in the middle of a %OA style escape
+                    decodedHashLength = decodeURIComponent(window.location.hash).length; 
+                } catch (e) {
+                    decodedHashLength = -1;
+                } 
+                if (decodedHashLength === text.length + 5) {
+                    document.getElementById("share-message").textContent = " Shareable link now in address bar. ";
+                } else {
+                    document.getElementById("share-message").textContent = " Text buffer too large to share. ";
+                }
+                lhs.editor.addOneTimeListener("change", function () {
+                    document.getElementById("share-message").style.display = "none";
+                });
+            };
+
+            if ("onhashchange" in window) {
+                window.onhashchange = function () {
+                    if(ignoreHashChange) { ignoreHashChange = false; return; }
+                    var queryStringSrcStart = window.location.hash.indexOf("#src=");
+                    if (queryStringSrcStart == 0) {
+                        var encoded = window.location.hash.substring("#src=".length);
+                        try {
+                            var text = decodeURIComponent(encoded);
+                            if (state >= SAMPLE_RENDERED) {
+                                lhs.editor.getModel().setValue(text);
+                            }
+                        } catch (e) {
+                            console.log("unable to parse #src= uri component");
+                        }
+                    }
+                }
+            }
+
+            // Save buffer to localStorage every second if there are changes to model
+            if (window.localStorage) {
+                var lastVersion;
+                setInterval(function () {
+                    if (state < SAMPLE_RENDERED)
+                        return;
+                    var model = lhs.editor.getModel();
+                    var version = model.getVersionId();
+                    if (version !== lastVersion) {
+                        window.localStorage["src"] = model.getValue();
+                        lastVersion = version;
+                    }
+                }, 1000);
+            }
+
+        })();
+
+    </script>
 </body>
 </html>
