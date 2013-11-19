@@ -3,17 +3,8 @@ body {
     padding: 0;
 }
 
-.tutorial {
-    position: absolute;
-    width: 45%;
-    border: 1px solid #ccc;
-
-}
-
-.content {
-    position: absolute;
-    left: 50%;
-
+.tutorial{
+    overflow-y: scroll;
 }
 
 canvas {

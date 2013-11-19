@@ -1,1 +1,1 @@
-"/Users/blemoine/temp/xke-typescript-v2/src/reference.ts" --sourcemap --removeComments --target ES5 --module amd --out js/out.js
+"/Users/mbreton/workspace/xke-typescript-v2/src/reference.ts" --sourcemap --removeComments --target ES5 --module amd --out js/out.js

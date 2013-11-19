@@ -1,57 +1,44 @@
-﻿<!DOCTYPE HTML>
+﻿<!DOCTYPE html>
+
 <html>
 <head>
-    <title>Arkanoid</title>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
-
-    <link href="css/arkanoid.css" rel="stylesheet"/>
-    <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
-    <link href="css/qunit-1.12.0.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=480" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>TypeScript - Playground</title>
     <link rel="stylesheet" type="text/css" href="/Script/vs/editor/editor.main.css" data-name="vs/editor/editor.main" />
     <link rel="stylesheet" type="text/css" href="/Script/vs/editor/css/vs-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
 </head>
-<body>
+<body class="playground" style="overflow-y: hidden;">
+<div id="nav">
+    <div class="centered-container">
+        <div class="clearfix">
+            <a id="homelink" href="/" title="TypeScript">
+                <div>TypeScript</div>
 
-<div class="ui two column divided grid">
-    <div class="row">
-        <div class="column">
-            <button id="share" class="playground-button ui button">Share</button>
-            <div id="typescriptEditor" ></div>
-            <div class="tutorial">
-                <div class="errors">
-
-                </div>
-                <div id="qunit">
-                </div>
-                <div id="qunit-fixture">
-                    <div id="mockScoreHolder"></div>
-                </div>
-            </div>
+            </a>
+            <a id="tutorial-link" class="minor" href="/Tutorial" title="Learn TypeScript with a Guided Tutorial">learn</a>
         </div>
-        <div class="column">
-
-            <div class="content">
-                <div id="score">0</div>
-                <div>
-                    <button class="ui button" id="cheat">CHEAT MODE</button>
-                </div>
-                <canvas id="scene"></canvas>
-            </div>
-        </div>
-   </div>
+    </div>
 </div>
 
 
-<script src="js/out.js"></script>
-
-<script>
-    (function () {
-        var game = new Game('scene');
-        game.render();
-    })();
-</script>
-
+<div id="playground-host" style="">
+    <div id="wrapper" style="padding-left: 20px; padding-right: 20px;">
+        <div style="float: left; padding-left: 50px;">
+            <span class="frame-title">TypeScript</span>
+            <button id="share" class="playground-button">Share</button>
+            <span id="share-message" style="display:none;"></span>
+        </div>
+        <div style="float: right; padding-right: 50px;" id="runDiv">
+            <button id="execute" class="playground-button">Run</button>
+            <span class="frame-title">JavaScript</span>
+        </div>
+        <div style="clear: both"></div>
+        <div id="typescriptEditor" style="height: 500px; position: relative; top: 20; left: 0; border: 1px solid grey;"></div>
+        <div id="javascriptEditor" style="height: 500px; position: relative; top: -502px; border: 1px solid grey;"></div>
+        <div style="clear: both"></div>
+    </div>
+</div>
 
 <!-- Placed at the end of the document so the pages load faster -->
 <script>
@@ -84,8 +71,15 @@
 (function () {
     'use strict';
 
+    var wrapper = document.getElementById('wrapper');
+
     var lhs = {
         domNode: document.getElementById('typescriptEditor'),
+        editor: null
+    };
+
+    var rhs = {
+        domNode: document.getElementById('javascriptEditor'),
         editor: null
     };
 
@@ -151,6 +145,12 @@
                     suggestOnTriggerCharacters: true,
                     showTypeScriptWarnings: false
                 });
+                rhs.editor = Monaco.Editor.create(rhs.domNode, {
+                    value: '',
+                    mode: 'text/plain',
+                    fontIsMonospace: true,
+                    readOnly: true
+                });
                 state = EDITORS_RENDERED;
                 console.info('editors rendered @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
@@ -171,6 +171,7 @@
                 console.info('sample compiled @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
             if (state === SAMPLE_COMPILED && javascriptModeLoaded) {
+                rhs.editor.getModel().setValue(rhs.editor.getModel().getValue(), javascriptMode);
                 state = FINISHED;
                 console.info('sample compiled & colored @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
@@ -181,18 +182,32 @@
     function resize() {
         // incorporate header and footer and adaptive layout
         var headerSize = 0; // 120
-        var footerSize = 500;
+        var footerSize = 51;
 
         var horizontalSpace = 10;
+        var wrapperSizeDiff = headerSize + footerSize;
         var windowHeight = window.innerHeight || document.body.offsetHeight || document.documentElement.offsetHeight;
 
+        wrapper.style.height = (windowHeight - wrapper.offsetTop - wrapperSizeDiff) + "px";
+        var halfWidth = Math.floor((wrapper.clientWidth - 40) / 2) - 8;
+        halfWidth -= (horizontalSpace / 2);
+
         // Layout lhs
-        var lhsSizeDiff = headerSize + footerSize;
-        lhs.domNode.style.width = "100%";
-        lhs.domNode.style.height = "400px";
-        $('.tutorial').css('height', windowHeight - 430 + "px");
+        var lhsSizeDiff = wrapperSizeDiff + 40;
+        lhs.domNode.style.width = halfWidth + "px";
+        lhs.domNode.style.height = (windowHeight - wrapper.offsetTop - lhsSizeDiff) + "px";
         if (lhs.editor) {
             lhs.editor.layout();
+        }
+
+        // Layout rhs
+        var rhsSizeDiff = wrapperSizeDiff + 40;
+        rhs.domNode.style.left = (halfWidth + 2 + horizontalSpace) + "px";
+        rhs.domNode.style.width = halfWidth + "px";
+        rhs.domNode.style.height = (windowHeight - wrapper.offsetTop - rhsSizeDiff) + "px";
+        rhs.domNode.style.top = -(wrapper.clientHeight - 38) + "px";
+        if (rhs.editor) {
+            rhs.editor.layout();
         }
     }
     resize();
@@ -206,12 +221,14 @@
         }
 
         compilerTriggerTimeoutID = window.setTimeout(function(){
+            var viewState = rhs.editor.saveViewState();
             try {
                 var model = lhs.editor.getModel(),
                         mode = model.getMode();
                 mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function(output) {
                     if (typeof output === "string") {
                         console.log(output);
+                        rhs.editor.getModel().setValue(output);
                     }
                 }, function(err) {
                     if(err.name === 'Canceled') {
@@ -222,15 +239,17 @@
             } catch (e) {
                 console.log("Error from compilation: " + e + "  " + (e.stack || ""));
             }
+            rhs.editor.restoreViewState(viewState);
         }, 100);
     };
 
     // ------------ Execution logic
-    /*document.getElementById("execute").onclick = */var toto= function () {
+    document.getElementById("execute").onclick = function () {
         var external = window.open();
         var script = external.window.document.createElement("script");
-        //script.textContent =
+        script.textContent = rhs.editor.getModel().getValue();
         external.window.document.body.appendChild(script);
+        //external.window.eval(rhs.editor.getModel().getValue());
     };
 
     var ignoreHashChange = false;
@@ -297,7 +316,5 @@
 })();
 
 </script>
-
-<script src="js/test.js"></script>
 </body>
 </html>
