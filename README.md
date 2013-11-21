@@ -1,7 +1,8 @@
 xke-typescript-v2
 =================
 
-
+//TODO FAIRE DES ENUMS pour les events
+//TODO FAIRE DES MODULES
 
 
 Plan présentation
