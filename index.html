@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>TypeScript</title>
+
+		<meta name="description" content="A language for using static typing in the JavaScript">
+		<meta name="author" content="Mathieu Breton / Benoit Lemoine">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+                <section>
+                    <h1>TypeScript</h1>
+                    <h2>Le langage qui type statiquement JavaScript</h2>
+                    <h3>By MicroSoft</h3>
+                </section>
+
+                <section>
+                    <h1>Problèmes de JavaScript</h1>
+                    <ul>
+                        <li>Syntaxe verbeuse de JS</li>
+                        <li>Typage dynamique parfois peu clair</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Solution proposée par TypeScript</h1>
+                    <ul>
+                        <li>Super-ensemble de JavaScript</li>
+                        <li>Typage Statique à la compilation</li>
+                        <li>Compatible avec la syntaxe Ecma 6</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Le Typage : types primitifs</h1>
+                    <p>any, boolean, string, number, Array</p>
+                    <pre><code data-trim contenteditable>
+var myString = "";
+var myString:any = "";
+var myString:string = "";
+
+var myList = [1,2,3];
+var myList:Array&lt;number&gt; = [1,2,3];
+var myList:number[] = [1,2,3];
+</code></pre>
+                </section>
+
+                <section>
+                    <h1>Le Typage : les fonctions</h1>
+                    <pre><code data-trim contenteditable>
+var myFun = function(a:string, b:number) { return 2 };
+var myFun:(a:string, b:number) => number = function(a:string, b:number) {
+    return 2;
+};
+
+var myFun2: () => void = function() {};
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Le Typage : les génériques</h1>
+                    <pre><code data-trim contenteditable>
+var map = function&lt;T,U&gt;(list:Array&lt;T&gt;, fn: (T) => U):Array&lt;U&gt; {
+    var result = [];
+    for(var key in list) {
+        result.push(fn(list[key]));
+    }
+    return result;
+};
+
+var list:string[] = map([1,2,3], function(n:number) {return n+''})
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>POO : les classes</h1>
+                    <pre><code data-trim contenteditable>
+class User {
+    private _id:number
+
+    constructor(public name:string) {
+        this._id = 1
+    }
+
+    getId() :number  {
+        return this._id;
+    }
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>POO : les getter / setter</h1>
+                    <pre><code data-trim contenteditable>
+class User {
+
+    constructor(private _id:number) { }
+
+    get id() :number  {
+        return this._id;
+    }
+
+    set id(id:number) {
+        this.id = id;
+    }
+}
+
+var user = new User(2);
+user.id //renvoit 2
+user.id = 3;
+user.id //renvoit 3
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>POO : les interfaces</h1>
+                    <pre><code data-trim contenteditable>
+interface Addable&lt;T&gt; { add(b:T):T}
+
+var sum = function&lt;T&gt;(initialValue:T, list:Array&lt;Addable&lt;T&gt;&gt;) {
+    return list.reduce(function(acc, val) {
+        return acc.add(val);
+    }, initialValue);
+}
+
+class Num implements Addable&lt;Num&gt; {
+    constructor(public a:number) {}
+    add(b:Num):Num {
+        return new Num(this.a +b.a);
+    }
+}
+
+sum(new Num(0), [new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>POO : les interfaces - duck typing</h1>
+                    <pre><code data-trim contenteditable>
+interface Addable&lt;T&gt; { add(b:T):T}
+
+var sum = function&lt;T&gt;(initialValue:T, list:Array&lt;Addable&lt;T&gt;&gt;) {
+    return list.reduce(function(acc, val) {
+        return acc.add(val);
+    }, initialValue);
+}
+
+class Num {
+    constructor(public a:number) {}
+    add(b:Num):Num {
+        return new Num(this.a +b.a);
+    }
+}
+
+sum(new Num(0), [new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Les modules</h1>
+                    <h3>Compatibilité Common JS, AMD et Ecma 6</h3>
+                    <pre><code data-trim contenteditable>
+module BatTrucs {
+    export var cave:any = "batcave"
+}
+
+console.log(BatTrucs.cave);
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Fonctions : syntaxe Ecma 6 - scope</h1>
+
+                    <pre><code data-trim contenteditable>
+$('#da').click(() => {
+    console.log(this);
+});
+//est équivalent à
+var self = this;
+$('#da').click(function() {
+    console.log(self);
+});
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Fonctions : syntaxe Ecma 6 - expression</h1>
+
+                    <pre><code data-trim contenteditable>
+[1,2,3].map((num) => num * 2).filter((num) => num <= 4);
+//Renvoit [2,4]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Enumeration</h1>
+
+                    <pre><code data-trim contenteditable>
+enum Color {
+    RED, BLUE, GREEN
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Déclaration d'ambiance</h1>
+
+                    <pre><code data-trim contenteditable>
+declare var $;
+
+$('body').click(() => alert('click'));
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Fichiers de références</h1>
+                    <a href="https://github.com/borisyankov/DefinitelyTyped">https://github.com/borisyankov/DefinitelyTyped</a>
+                    <pre><code data-trim contenteditable>
+/// &lt;reference path="jquery.d.ts" /&gt;
+
+$('body').click(() => alert('click'));
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Outils de mise en &oelig;uvre</h1>
+                    <ul>
+                        <li>Grunt</li>
+                        <li>Les IDE JetBrains</li>
+                        <li>Visual Studio</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>L'avenir</h1>
+                    <ul>
+                        <li>Sortie prochaine de la 1.0 - version de stabilisation</li>
+                        <li>Amélioration du support d'Ecma 6 (for compréhension, let, const, etc.)</li>
+                        <li>Amélioration des temps de compilation</li>
+                    </ul>
+                </section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
