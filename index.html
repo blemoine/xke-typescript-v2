@@ -146,9 +146,9 @@ user.id //renvoit 3
                 <section>
                     <h1>POO : les interfaces</h1>
                     <pre><code data-trim contenteditable>
-interface Addable<T> { add(b:Addable<T>):Addable<T>}
+interface Addable&lt;T&gt { add(b:Addable&lt;T&gt;):Addable&lt;T&gt;}
 
-var sum = function<T>(list:Array<Addable<T>>):Addable<T> {
+var sum = function&lt;T&gt;(list:Array&lt;Addable&lt;T&gt;&gt;):Addable&lt;T&gt; {
     return list.reduce(function(acc, val) {
         return acc.add(val);
     });
@@ -169,15 +169,15 @@ sum([new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
                 <section>
                     <h1>POO : les interfaces - duck typing</h1>
                     <pre><code data-trim contenteditable>
-interface Addable<T> { add(b:Addable<T>):Addable<T>}
+interface Addable&lt;T&gt { add(b:Addable&lt;T&gt;):Addable&lt;T&gt;}
 
-var sum = function<T>(list:Array<Addable<T>>):Addable<T> {
+var sum = function&lt;T&gt;(list:Array&lt;Addable&lt;T&gt;&gt;):Addable&lt;T&gt; {
     return list.reduce(function(acc, val) {
         return acc.add(val);
     });
 }
 
-class Num implements Addable&lt;Num&gt; {
+class Num {
     constructor(public a:number) {}
     add(b:Num):Num {
         return new Num(this.a +b.a);
