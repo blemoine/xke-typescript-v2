@@ -146,12 +146,12 @@ user.id //renvoit 3
                 <section>
                     <h1>POO : les interfaces</h1>
                     <pre><code data-trim contenteditable>
-interface Addable&lt;T&gt; { add(b:T):T}
+interface Addable<T> { add(b:Addable<T>):Addable<T>}
 
-var sum = function&lt;T&gt;(initialValue:T, list:Array&lt;Addable&lt;T&gt;&gt;) {
+var sum = function<T>(list:Array<Addable<T>>):Addable<T> {
     return list.reduce(function(acc, val) {
         return acc.add(val);
-    }, initialValue);
+    });
 }
 
 class Num implements Addable&lt;Num&gt; {
@@ -161,7 +161,7 @@ class Num implements Addable&lt;Num&gt; {
     }
 }
 
-sum(new Num(0), [new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
+sum([new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
 
                     </code></pre>
                 </section>
@@ -169,23 +169,22 @@ sum(new Num(0), [new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
                 <section>
                     <h1>POO : les interfaces - duck typing</h1>
                     <pre><code data-trim contenteditable>
-interface Addable&lt;T&gt; { add(b:T):T}
+interface Addable<T> { add(b:Addable<T>):Addable<T>}
 
-var sum = function&lt;T&gt;(initialValue:T, list:Array&lt;Addable&lt;T&gt;&gt;) {
+var sum = function<T>(list:Array<Addable<T>>):Addable<T> {
     return list.reduce(function(acc, val) {
         return acc.add(val);
-    }, initialValue);
+    });
 }
 
-class Num {
+class Num implements Addable&lt;Num&gt; {
     constructor(public a:number) {}
     add(b:Num):Num {
         return new Num(this.a +b.a);
     }
 }
 
-sum(new Num(0), [new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
-
+sum([new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
                     </code></pre>
                 </section>
 
