@@ -216,13 +216,34 @@ $('#da').click(function() {
                 </section>
 
                 <section>
-                    <h1>Fonctions : syntaxe Ecma 6 - expression</h1>
+                    <h1>Ecma 6 : fonctions - expression</h1>
 
                     <pre><code data-trim contenteditable>
 [1,2,3].map((num) => num * 2).filter((num) => num <= 4);
 //Renvoit [2,4]
                     </code></pre>
                 </section>
+
+                <section>
+                    <h1>Ecma 6 : valeur par défaut</h1>
+                    <pre><code data-trim contenteditable>
+function hello(name='world') {
+    console.log('hello '+name);
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Ecma 6 : rest parameters</h1>
+                    <pre><code data-trim contenteditable>
+var sum = function(...args:number[]) {
+    return args.reduce((acc,val) => acc + val)
+}
+
+sum(1,2,3);//retourne 6
+                    </code></pre>
+                </section>
+
 
                 <section>
                     <h1>Enumeration</h1>
@@ -243,6 +264,8 @@ declare var $;
 $('body').click(() => alert('click'));
                     </code></pre>
                 </section>
+
+
 
                 <section>
                     <h1>Fichiers de références</h1>
