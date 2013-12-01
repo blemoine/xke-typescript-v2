@@ -5,24 +5,29 @@ if (typeof Player != "undefined") {
     PlayerClass = Player;
 }
 
+enum GameEvents {
+    START, LOSE, NEXT
+}
 class EventBus {
     listeners:any = {};
 
-    on(event:String, listener:() => any) {
+    on(event:GameEvents, listener:() => any) {
         if (!this.listeners[event]) {
             this.listeners[event] = [];
         }
         this.listeners[event].push(listener);
     }
 
-    fire(event) {
+    fire(event:GameEvents) {
         if (this.listeners[event]) {
             this.listeners[event].forEach((listener) => listener())
         }
     }
 }
 
+
 var BUS = new EventBus();
+
 
 class Game implements Renderable {
     state:StateModule.State;
@@ -53,17 +58,17 @@ class Game implements Renderable {
             this.changeState(ingameState);
         };
 
-        BUS.on('start', () => {
+        BUS.on(GameEvents.START, () => {
             this.player = new PlayerClass();
             this.player.displayScore('#score');
             goToIngameState();
         });
 
-        BUS.on('lose', () => {
+        BUS.on(GameEvents.LOSE, () => {
             this.changeState(new LoseState(this.drawCanvas));
         });
 
-        BUS.on('next', () => {
+        BUS.on(GameEvents.NEXT, () => {
             ++this.currentLevel;
             if (this.currentLevel < Lvl.levelsDescriptor.length) {
                 goToIngameState();

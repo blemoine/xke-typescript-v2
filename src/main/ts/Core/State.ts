@@ -21,6 +21,8 @@ module StateModule {
                 this.events.forEach((reactor) => {
                     if (key == reactor.keyCode) {
                         reactor.action();
+                        event.preventDefault();
+                        return false;
                     }
                 });
             });
