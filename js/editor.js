@@ -9,7 +9,6 @@
     var IDLE_STATE = 0,
         EDITORS_RENDERED = 1,
         SAMPLE_RENDERED = 2,
-        SAMPLE_COLORED = 3,
         SAMPLE_COMPILED = 4,
         FINISHED = 5,
         state = IDLE_STATE;
@@ -95,7 +94,7 @@
 
         // Layout lhs
         lhs.domNode.style.width = "100%";
-        lhs.domNode.style.height = "400px";
+        lhs.domNode.style.height = "500px";
         $('.tutorial').css('height', windowHeight - 430 + "px");
         if (lhs.editor) {
             lhs.editor.layout();
