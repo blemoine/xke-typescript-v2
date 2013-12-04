@@ -1,11 +1,5 @@
-var require = {
-    baseUrl: "Script"
-};
-
 (function () {
     'use strict';
-
-    var startTime = (new Date()).getTime();
 
     var lhs = {
         domNode: document.getElementById('typescriptEditor'),
@@ -15,10 +9,12 @@ var require = {
     var IDLE_STATE = 0,
         EDITORS_RENDERED = 1,
         SAMPLE_RENDERED = 2,
+        SAMPLE_COLORED = 3,
         SAMPLE_COMPILED = 4,
         FINISHED = 5,
         state = IDLE_STATE;
 
+    // ------------ Loading logic
     (function () {
 
         var editorLoaded = false, typescriptModeLoaded = false, sampleLoaded = false;
@@ -52,7 +48,7 @@ var require = {
                 }
             } else if (localStorageStart) {
                 sampleLoaded = true;
-                sample = window.localStorage["src"] || '';
+                sample =  window.localStorage["src"] || '';
                 onSomethingLoaded();
             }
         })();
@@ -85,7 +81,7 @@ var require = {
                 state = SAMPLE_COMPILED;
                 console.info('sample compiled @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
-            if (state === SAMPLE_COMPILED && javascriptModeLoaded) {
+            if (state === SAMPLE_COMPILED) {
                 state = FINISHED;
                 console.info('sample compiled & colored @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
@@ -94,15 +90,10 @@ var require = {
 
     // ------------ Resize logic
     function resize() {
-        // incorporate header and footer and adaptive layout
-        var headerSize = 0; // 120
-        var footerSize = 500;
 
-        var horizontalSpace = 10;
         var windowHeight = window.innerHeight || document.body.offsetHeight || document.documentElement.offsetHeight;
 
         // Layout lhs
-        var lhsSizeDiff = headerSize + footerSize;
         lhs.domNode.style.width = "100%";
         lhs.domNode.style.height = "400px";
         $('.tutorial').css('height', windowHeight - 430 + "px");
@@ -110,7 +101,6 @@ var require = {
             lhs.editor.layout();
         }
     }
-
     resize();
     window.onresize = resize;
 
@@ -121,18 +111,19 @@ var require = {
             window.clearTimeout(compilerTriggerTimeoutID);
         }
 
-        compilerTriggerTimeoutID = window.setTimeout(function () {
+        compilerTriggerTimeoutID = window.setTimeout(function(){
             try {
                 var model = lhs.editor.getModel();
                 var mode = model.getMode();
 
-                mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function (output) {
+                mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function(output) {
                     if (typeof output === "string") {
                         var tsOutput = window.document.getElementById('ts-output');
+                        console.log(output);
                         tsOutput.textContent = output;
                     }
-                }, function (err) {
-                    if (err.name === 'Canceled') {
+                }, function(err) {
+                    if(err.name === 'Canceled') {
                         return;
                     }
                     console.error(err);
@@ -144,8 +135,7 @@ var require = {
     };
 
     // ------------ Execution logic
-    /*document.getElementById("execute").onclick = */
-    var toto = function () {
+    /*document.getElementById("execute").onclick = */var toto= function () {
         var external = window.open();
         var script = external.window.document.createElement("script");
         //script.textContent =
@@ -182,10 +172,7 @@ var require = {
 
     if ("onhashchange" in window) {
         window.onhashchange = function () {
-            if (ignoreHashChange) {
-                ignoreHashChange = false;
-                return;
-            }
+            if(ignoreHashChange) { ignoreHashChange = false; return; }
             var queryStringSrcStart = window.location.hash.indexOf("#src=");
             if (queryStringSrcStart == 0) {
                 var encoded = window.location.hash.substring("#src=".length);
