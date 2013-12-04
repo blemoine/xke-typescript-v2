@@ -1,77 +1,11 @@
-﻿<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Arkanoid</title>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
-
-    <link href="css/arkanoid.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="Script/vs/editor/editor.main.css" data-name="vs/editor/editor.main" />
-    <link rel="stylesheet" type="text/css" href="Script/vs/editor/css/vs-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
-</head>
-<body>
-
-<div class="ui two column divided grid">
-    <div class="row">
-        <div class="column">
-            <button id="share" class="playground-button ui button">Share</button>
-            <div id="typescriptEditor" ></div>
-            <div class="tutorial">
-                <div class="errors">
-
-                </div>
-                <div id="qunit">
-                </div>
-                <div id="qunit-fixture">
-                    <div id="mockScoreHolder"></div>
-                </div>
-            </div>
-        </div>
-        <div class="column">
-
-            <div class="content">
-                <div id="score">0</div>
-                <div>
-                    <button class="ui button" id="cheat">CHEAT MODE</button>
-                </div>
-                <canvas id="scene"></canvas>
-            </div>
-        </div>
-   </div>
-</div>
-
-
-<!-- Placed at the end of the document so the pages load faster -->
-<script>
-    window.jqueryAck = "";
-    var startTime = (new Date()).getTime();
-</script>
-<!--    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.4.1.min.js"></script>-->
-<!--
-    <script src='..\..\bin\strada.js'></script>
-    <script src="Script/site.js"></script>
--->
-<script type="text/javascript">
-    var require = {
-        baseUrl: "Script"
-    };
-</script>
-<script src="Script/vs/loader.js"></script>
-<!-- Experiment with commenting out the following scripts & how it affects load time -->
-<!-- A. -->
-<script src="Script/vs/editor/editor.main.nls.js"></script>
-<script src="Script/vs/editor/editor.main.js"></script>
-
-<!-- B. -->
-<!--    <script type="text/javascript" src="/Script/vs/languages/typescript/typescript.js"></script>-->
-
-<!-- C. -->
-<!--    <script type="text/javascript" src="/Script/vs/languages/javascript/javascript.js"></script>-->
-
-<script type="text/javascript">
+var require = {
+    baseUrl: "Script"
+};
 
 (function () {
     'use strict';
+
+    var startTime = (new Date()).getTime();
 
     var lhs = {
         domNode: document.getElementById('typescriptEditor'),
@@ -79,14 +13,12 @@
     };
 
     var IDLE_STATE = 0,
-            EDITORS_RENDERED = 1,
-            SAMPLE_RENDERED = 2,
-            SAMPLE_COLORED = 3,
-            SAMPLE_COMPILED = 4,
-            FINISHED = 5,
-            state = IDLE_STATE;
+        EDITORS_RENDERED = 1,
+        SAMPLE_RENDERED = 2,
+        SAMPLE_COMPILED = 4,
+        FINISHED = 5,
+        state = IDLE_STATE;
 
-    // ------------ Loading logic
     (function () {
 
         var editorLoaded = false, typescriptModeLoaded = false, sampleLoaded = false;
@@ -120,7 +52,7 @@
                 }
             } else if (localStorageStart) {
                 sampleLoaded = true;
-                sample =  window.localStorage["src"] || '';
+                sample = window.localStorage["src"] || '';
                 onSomethingLoaded();
             }
         })();
@@ -153,7 +85,7 @@
                 state = SAMPLE_COMPILED;
                 console.info('sample compiled @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
-            if (state === SAMPLE_COMPILED) {
+            if (state === SAMPLE_COMPILED && javascriptModeLoaded) {
                 state = FINISHED;
                 console.info('sample compiled & colored @ ' + ((new Date()).getTime() - startTime) + 'ms');
             }
@@ -162,10 +94,15 @@
 
     // ------------ Resize logic
     function resize() {
+        // incorporate header and footer and adaptive layout
+        var headerSize = 0; // 120
+        var footerSize = 500;
 
+        var horizontalSpace = 10;
         var windowHeight = window.innerHeight || document.body.offsetHeight || document.documentElement.offsetHeight;
 
         // Layout lhs
+        var lhsSizeDiff = headerSize + footerSize;
         lhs.domNode.style.width = "100%";
         lhs.domNode.style.height = "400px";
         $('.tutorial').css('height', windowHeight - 430 + "px");
@@ -173,6 +110,7 @@
             lhs.editor.layout();
         }
     }
+
     resize();
     window.onresize = resize;
 
@@ -183,19 +121,18 @@
             window.clearTimeout(compilerTriggerTimeoutID);
         }
 
-        compilerTriggerTimeoutID = window.setTimeout(function(){
+        compilerTriggerTimeoutID = window.setTimeout(function () {
             try {
                 var model = lhs.editor.getModel();
                 var mode = model.getMode();
 
-                mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function(output) {
+                mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function (output) {
                     if (typeof output === "string") {
                         var tsOutput = window.document.getElementById('ts-output');
-                        console.log(output);
                         tsOutput.textContent = output;
                     }
-                }, function(err) {
-                    if(err.name === 'Canceled') {
+                }, function (err) {
+                    if (err.name === 'Canceled') {
                         return;
                     }
                     console.error(err);
@@ -207,7 +144,8 @@
     };
 
     // ------------ Execution logic
-    /*document.getElementById("execute").onclick = */var toto= function () {
+    /*document.getElementById("execute").onclick = */
+    var toto = function () {
         var external = window.open();
         var script = external.window.document.createElement("script");
         //script.textContent =
@@ -244,7 +182,10 @@
 
     if ("onhashchange" in window) {
         window.onhashchange = function () {
-            if(ignoreHashChange) { ignoreHashChange = false; return; }
+            if (ignoreHashChange) {
+                ignoreHashChange = false;
+                return;
+            }
             var queryStringSrcStart = window.location.hash.indexOf("#src=");
             if (queryStringSrcStart == 0) {
                 var encoded = window.location.hash.substring("#src=".length);
@@ -276,19 +217,3 @@
     }
 
 })();
-
-</script>
-
-<script src="js/out.js"></script>
-<script id="ts-output"></script>
-<script src="js/PonyUnit.js"></script>
-<script src="js/test.js"></script>
-<script>
-    (function () {
-        var game = new Game('scene');
-        game.render();
-        PonyUnit.run()
-    })();
-</script>
-</body>
-</html>
