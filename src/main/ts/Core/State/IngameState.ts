@@ -82,7 +82,7 @@ module StateModule {
                         ball.speed.rotate(newAngle);
 
                     } else if (newPosY + Ball.radius > drawCanvas.height) {
-                        BUS.fire('lose');
+                        BUS.fire(GameEvents.LOSE);
                     }
 
                     var collidingBrick:any = this.level.collidingBrick(ball);
@@ -111,7 +111,7 @@ module StateModule {
                 }
 
                 if (this.level.finished()) {
-                    BUS.fire('next');
+                    BUS.fire(GameEvents.NEXT);
                 }
 
             }, timeIntervalInMs);

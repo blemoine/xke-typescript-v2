@@ -1,33 +1,12 @@
-xke-typescript-v2
-=================
+XKE TypeScript
+==============
 
 
+* Installer node (via [nvm](https://github.com/creationix/nvm) par exemple)
+* lancer la commande `npm install`
+* lancer grunt pour lancer la compilation `./node_modules/.bin/grunt`
+* ouvrir le fichier index.html dans un navigateur
+* remplir le fichier srcm/main/ts/Application.ts pour faire passer les tests unitaires
 
 
-Plan présentation
-
-* Typescript
-* By Microsoft
-* Objectif : typage statique / super ensemble de Javascript / compatible Ecma 6
-* Fonctionnalités offerte
-   - typage type primitif (number / string / boolean / Array / any)
-   - générique
-   - typage de fonction ( () => void )
-   - orientation objet avec des classes (constructor / méthodes / visibilité)
-   - possibilité de getter/setter si compile en ecma 5
-   - interface et duck typing
-   - modules (compatibilité amd ou common js en fonction de la compilation)
-   - syntaxe ecma6 pour les fonctions (expressions)
-   - enum
-   - fichier de référence / "ambient declaration"
-
-* outillage nécessaire pour mise en place
-   - grunt
-   - visual studio
-
-
-
-* Conclusion
-  - l'avenir => un meilleur support d'ecma 6
-  - optimisation du compilateur
 

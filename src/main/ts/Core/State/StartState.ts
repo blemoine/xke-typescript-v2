@@ -8,7 +8,7 @@ class StartState extends StateModule.State {
         this.events.push({
             keyCode: DOM_VK_SPACE,
             action: function () {
-                BUS.fire('start');
+                BUS.fire(GameEvents.START);
                 return false;
             }
         });
