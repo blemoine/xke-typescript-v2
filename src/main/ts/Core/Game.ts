@@ -1,9 +1,6 @@
 //Inversion de Control, en mode Arrache !
 declare var Player;
-var PlayerClass = PlayerMock;
-if (typeof Player != "undefined") {
-    PlayerClass = Player;
-}
+
 
 enum GameEvents {
     START, LOSE, NEXT
@@ -44,6 +41,11 @@ class Game implements Renderable {
         var context = canvas.getContext('2d');
         this.drawCanvas = new DrawCanvas(context, this.height, this.width);
         this.changeState(new StartState(this.drawCanvas));
+
+        var PlayerClass = PlayerMock;
+        if (typeof Player != "undefined") {
+            PlayerClass = Player;
+        }
 
         this.player = new PlayerClass();
         this.player.displayScore('#score');
