@@ -5,8 +5,17 @@ body {
 
 .tutorial{
     overflow-y: scroll;
+    position: absolute;
+    top: 510px;
+    bottom: 0px;
+    left: 5px;
+    right: 5px;
 }
 
 canvas {
     border: 1px solid black;
+}
+
+#qunit-header, #qunit-testrunner-toolbar, #qunit-testresult, #qunit-userAgent, #qunit-banner{
+    display: none;
 }

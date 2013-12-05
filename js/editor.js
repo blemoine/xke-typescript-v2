@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    console.log('boot')
+
     var lhs = {
         domNode: document.getElementById('typescriptEditor'),
         editor: null
@@ -12,6 +14,18 @@
         SAMPLE_COMPILED = 4,
         FINISHED = 5,
         state = IDLE_STATE;
+
+    var timer = null;
+    function debounce(fn, delay) {
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(context, args);
+                timer=null;
+            }, delay);
+        };
+    }
 
     // ------------ Loading logic
     (function () {
@@ -94,8 +108,8 @@
 
         // Layout lhs
         lhs.domNode.style.width = "100%";
-        lhs.domNode.style.height = "500px";
-        $('.tutorial').css('height', windowHeight - 430 + "px");
+        lhs.domNode.style.height = windowHeight - 90 +"px";
+        $('#game-frame').height(windowHeight - 90);
         if (lhs.editor) {
             lhs.editor.layout();
         }
@@ -117,9 +131,25 @@
 
                 mode.getEmitOutput(model.getAssociatedResource(), 'js').then(function(output) {
                     if (typeof output === "string") {
-                        var tsOutput = window.document.getElementById('ts-output');
-                        console.log(output);
-                        tsOutput.textContent = output;
+                        debounce(function(output){
+                            var gameFrame = window.document.getElementById('game-frame');
+                            if (!!gameFrame.src){
+                                gameFrame.contentWindow.location.reload();
+                            } else{
+                                gameFrame.src="game.html";
+                            }
+
+                            $(gameFrame).on('load',function(){
+                               console.log('iframe loaded');
+                                var tsOutput = gameFrame.contentWindow.document.getElementById("ts-output");
+                                if (tsOutput){
+                                    tsOutput.textContent = output;
+                                    gameFrame.contentWindow.runTests();
+                                    console.log(output);
+                                }
+                                $(gameFrame).off('load');
+                            });
+                        }, 1000)(output);
                     }
                 }, function(err) {
                     if(err.name === 'Canceled') {
@@ -131,14 +161,6 @@
                 console.log("Error from compilation: " + e + "  " + (e.stack || ""));
             }
         }, 100);
-    };
-
-    // ------------ Execution logic
-    /*document.getElementById("execute").onclick = */var toto= function () {
-        var external = window.open();
-        var script = external.window.document.createElement("script");
-        //script.textContent =
-        external.window.document.body.appendChild(script);
     };
 
     var ignoreHashChange = false;
