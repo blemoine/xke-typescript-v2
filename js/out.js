@@ -487,11 +487,6 @@ var WinState = (function (_super) {
     };
     return WinState;
 })(StateModule.State);
-var PlayerClass = PlayerMock;
-if (typeof Player != "undefined") {
-    PlayerClass = Player;
-}
-
 var GameEvents;
 (function (GameEvents) {
     GameEvents[GameEvents["START"] = 0] = "START";
@@ -534,6 +529,10 @@ var Game = (function () {
         var context = canvas.getContext('2d');
         this.drawCanvas = new DrawCanvas(context, this.height, this.width);
         this.changeState(new StartState(this.drawCanvas));
+        var PlayerClass = PlayerMock;
+        if (typeof Player != "undefined") {
+            PlayerClass = Player;
+        }
 
         this.player = new PlayerClass();
         this.player.displayScore('#score');
