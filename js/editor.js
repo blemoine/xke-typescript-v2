@@ -109,7 +109,6 @@
         // Layout lhs
         lhs.domNode.style.width = "100%";
         lhs.domNode.style.height = windowHeight - 90 +"px";
-        $('#game-frame').height(windowHeight - 90);
         if (lhs.editor) {
             lhs.editor.layout();
         }
