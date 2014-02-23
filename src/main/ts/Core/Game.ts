@@ -45,6 +45,11 @@ class Game implements Renderable {
             PlayerClass = Player;
         }
 
+        var PlayerClass = PlayerMock;
+        if (typeof Player != "undefined") {
+            PlayerClass = Player;
+        }
+
         this.player = new PlayerClass();
         this.player.displayScore('#score');
 
