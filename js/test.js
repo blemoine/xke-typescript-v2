@@ -37,41 +37,27 @@ test('Brick must have static width', function () {
     equal(Brick.width, 40, "class Brick must have 40 for static width");
 });
 
-test('a brick must have a method isColliding taking a ball', function () {
-    var brick = new Brick(20, 40);
-    equal(typeof brick.isColliding, 'function', "a Brick must have a method named isColliding");
-    equal(brick.isColliding.length, 1, 'isColliding must be a method taking one parameter of type Ball');
+test('a brick must have a isColliding method which take one parameter', function () {
+    equal(typeof Brick.prototype.isColliding, 'function', 'isColliding must be a method');
+    equal(Brick.prototype.isColliding.length, 1, 'isColliding must take one parameter of type Ball');
 });
 
-test('a brick is not colliding with a brick if leftmost part of ball if right of rightmost part of brick ', function () {
-    var brick = new Brick(20, 40);
-    var ball = new Ball(69, 40);
-    equal(brick.isColliding(ball), false, "isColliding must return a boolean indicating if the ball and the brick collide");
+test('must call ball is Colliding with correct parameter when a brick isColliding is called', function () {
+    var brick = new Brick(30, 20);
+    var ball = new Ball(1, 2);
+    ball.isColliding = function (x, y, leftX, bottomY) {
+        equal(x, 30, 'The first parameter of ball.isColliding must be the x position of the brick');
+        equal(y, 20, 'The second parameter of ball.isColliding must be the y position of the brick');
+        equal(leftX, 30 + Brick.width, 'The third parameter of ball.isColliding must be the leftmost x position of the brick');
+        equal(bottomY, 20 + Brick.height, 'The fourth parameter of ball.isColliding must be the most bottom y position of the brick');
+        return true;
+    }
+
+    var mockResult = brick.isColliding(ball);
+
+    equal(mockResult, true, 'The result must be true, because the mock returns true');
 });
 
-test('a brick is not colliding with a brick if rightmost part of ball if left of leftmost part of brick ', function () {
-    var brick = new Brick(20, 40);
-    var ball = new Ball(11, 40);
-    equal(brick.isColliding(ball), false, "isColliding must return a boolean indicating if the ball and the brick collide");
-});
-
-test('a brick is not colliding with a brick if uppermost part of ball if bottom of most bottom part of brick ', function () {
-    var brick = new Brick(20, 40);
-    var ball = new Ball(20, 79);
-    equal(brick.isColliding(ball), false, "isColliding must return a boolean indicating if the ball and the brick collide");
-});
-
-test('a brick is not colliding with a brick if most bottom part of ball if upper of uppermost part of brick ', function () {
-    var brick = new Brick(20, 40);
-    var ball = new Ball(20, 31);
-    equal(brick.isColliding(ball), false, "isColliding must return a boolean indicating if the ball and the brick collide");
-});
-
-test('a brick is colliding with a brick if a point of the ball is in the brick', function () {
-    var brick = new Brick(20, 40);
-    equal(brick.isColliding(new Ball(20, 33)), true, "isColliding must return a boolean indicating if the ball and the brick collide");
-    equal(brick.isColliding(new Ball(13, 40)), true, "isColliding must return a boolean indicating if the ball and the brick collide");
-});
 
 module('Player');
 

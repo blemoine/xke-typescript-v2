@@ -9,4 +9,10 @@ class Ball {
         this.speed = new Speed();
     }
 
+    isColliding(x:number, y:number, leftX:number, bottomY:number):boolean {
+        return this.x + Ball.radius > x &&
+            this.x - Ball.radius < leftX &&
+            this.y + Ball.radius > y &&
+            this.y - Ball.radius < bottomY;
+    }
 }
