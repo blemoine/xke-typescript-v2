@@ -4,3 +4,4 @@ node_modules
 target
 tscommand.tmp.txt
 dist
+*.DS_Store
