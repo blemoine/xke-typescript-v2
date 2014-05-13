@@ -1,12 +1,9 @@
 XKE TypeScript
 ==============
 
+To run locally, clone the repo, and execute in your shell :
 
-* Installer node (via [nvm](https://github.com/creationix/nvm) par exemple)
-* lancer la commande `npm install`
-* lancer grunt pour lancer la compilation `./node_modules/.bin/grunt`
-* ouvrir le fichier index.html dans un navigateur
-* remplir le fichier srcm/main/ts/Application.ts pour faire passer les tests unitaires
+* `npm install`
+* `node server.js`
 
-
-
+An online demo is available [here](http://blemoine.github.io/xke-typescript-v2/), and the slides are [here](http://blemoine.github.io/xke-typescript-v2/slides/)
