@@ -58,6 +58,22 @@ test('must call ball is Colliding with correct parameter when a brick isCollidin
     equal(mockResult, true, 'The result must be true, because the mock returns true');
 });
 
+test('must call ball is Colliding with correct parameter when a brick isColliding is called', function () {
+    var brick = new Brick(30, 20);
+    var ball = new Ball(1, 2);
+    ball.isColliding = function (x, y, leftX, bottomY) {
+        equal(x, 30, 'The first parameter of ball.isColliding must be the x position of the brick');
+        equal(y, 20, 'The second parameter of ball.isColliding must be the y position of the brick');
+        equal(leftX, 30 + Brick.width, 'The third parameter of ball.isColliding must be the leftmost x position of the brick');
+        equal(bottomY, 20 + Brick.height, 'The fourth parameter of ball.isColliding must be the most bottom y position of the brick');
+        return false;
+    }
+
+    var mockResult = brick.isColliding(ball);
+
+    equal(mockResult, false, 'The result must be false, because the mock returns false');
+});
+
 
 module('Player');
 
