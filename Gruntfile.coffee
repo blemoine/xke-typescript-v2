@@ -2,6 +2,7 @@ module.exports = (grunt) =>
 
 	# load the task
 	grunt.loadNpmTasks 'grunt-ts'
+  grunt.loadNpmTasks 'grunt-gh-pages'
 
 	# Configure grunt here
 	grunt.initConfig
@@ -13,5 +14,9 @@ module.exports = (grunt) =>
 				watch: 'src'
 			options:
 				target: 'es5'
+    'gh-pages':
+      options:
+        base: 'dist'
+        src: ['**']
 
 	grunt.registerTask("default", ["ts:dev"]);
