@@ -1,0 +1,4 @@
+/*---------------------------------------------------------
+* Copyright (C) Microsoft Corporation. All rights reserved.
+*--------------------------------------------------------*/
+"use strict";!function(){var e=self.MonacoEnvironment,r=e&&e.baseUrl?e.baseUrl:"../../../";importScripts(r+"vs/loader.js"),require.config({baseUrl:r,catchError:!0});var s=[];self.onmessage=function(e){s.push(e)},require(["vs/base/worker/workerServer"],function(e){var r=new e.WorkerServer(function(e){self.postMessage(JSON.stringify(e))});for(self.onmessage=function(e){r.onmessage(JSON.parse(e.data))};s.length>0;)self.onmessage(s.shift())})}();

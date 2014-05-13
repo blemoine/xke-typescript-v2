@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game</title>
+    <link href="css/arkanoid.css" rel="stylesheet"/>
+    <link href="css/qunit-1.12.0.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css"/>
+
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700"
+          rel="stylesheet" type="text/css">
+
+    <script src="js/qunit-1.12.0.js"></script>
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/out.js"></script>
+    <script src="js/test.js"></script>
+    <script>
+        QUnit.config.hidepassed = true;
+        QUnit.config.autostart = false;
+
+        function runTests() {
+            QUnit.start();
+        }
+    </script>
+</head>
+<body>
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<div class="ui column">
+    <div class="row">
+        <h1 class="ui dividing header">
+            Ici tu vois le résultat
+        </h1>
+
+        <p>
+            <button class="ui labeled teal button" id="cheat">CHEAT MODE</button>
+            <span id="score">0</span>
+        </p>
+
+
+        <div class="content">
+            <canvas id="scene"></canvas>
+        </div>
+        <div class="tutorial">
+            <div class="errors">
+
+            </div>
+            <div id="qunit">
+            </div>
+            <div id="qunit-fixture">
+                <div id="mockScoreHolder"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="ts-output"></script>
+<script>
+    (function () {
+        setTimeout(function () {
+            var game = new Game('scene');
+            game.render();
+        }, 100);
+    })();
+</script>
+</body>
+</html>

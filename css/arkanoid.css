@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.tutorial{
+    overflow-y: scroll;
+    position: absolute;
+    top: 605px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+#qunit-header, #qunit-testrunner-toolbar, #qunit-testresult, #qunit-userAgent, #qunit-banner{
+    display: none;
+}
