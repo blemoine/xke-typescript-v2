@@ -17,4 +17,5 @@
 //grunt-end
 
 
+/// <reference path="main/ts/Application.ts" />
 /// <reference path="main/ts/Core/Game.ts" />
