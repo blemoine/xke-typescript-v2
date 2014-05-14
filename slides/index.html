@@ -44,7 +44,7 @@
                 </section>
 
                 <section>
-                    <h1>Problèmes de JavaScript</h1>
+                    <h2>Problèmes de JavaScript</h2>
                     <ul>
                         <li>Syntaxe verbeuse de JS</li>
                         <li>Typage dynamique parfois peu clair</li>
@@ -52,7 +52,7 @@
                 </section>
 
                 <section>
-                    <h1>Solution proposée par TypeScript</h1>
+                    <h2>Solution proposée par TypeScript</h2>
                     <ul>
                         <li>Super-ensemble de JavaScript</li>
                         <li>Typage Statique</li>
@@ -61,7 +61,7 @@
                 </section>
 
                 <section>
-                    <h1>Le Typage : types primitifs</h1>
+                    <h2>Le Typage : types primitifs</h2>
                     <p>any, boolean, string, number, Array</p>
                     <pre><code data-trim contenteditable>
 var myString = "";
@@ -75,7 +75,7 @@ var myList:number[] = [1,2,3];
                 </section>
 
                 <section>
-                    <h1>Le Typage : les fonctions</h1>
+                    <h2>Le Typage : les fonctions</h2>
                     <pre><code data-trim contenteditable>
 var myFun = function(a:string, b:number) { return 2 };
 var myFun:(a:string, b:number) => number = function(a:string, b:number) {
@@ -88,7 +88,7 @@ var myFun2: () => void = function() {};
                 </section>
 
                 <section>
-                    <h1>Le Typage : les génériques</h1>
+                    <h2>Le Typage : les génériques</h2>
                     <pre><code data-trim contenteditable>
 var map = function&lt;T,U&gt;(list:Array&lt;T&gt;, fn: (T) => U):Array&lt;U&gt; {
     var result = [];
@@ -104,7 +104,7 @@ var list:string[] = map([1,2,3], function(n:number) {return n+''})
                 </section>
 
                 <section>
-                    <h1>POO : les classes</h1>
+                    <h2>POO : les classes</h2>
                     <pre><code data-trim contenteditable>
 class User {
     private _id:number
@@ -121,7 +121,7 @@ class User {
                 </section>
 
                 <section>
-                    <h1>POO : les getter / setter</h1>
+                    <h2>POO : les getter / setter</h2>
                     <pre><code data-trim contenteditable>
 class User {
 
@@ -144,7 +144,7 @@ user.id //renvoit 3
                 </section>
 
                 <section>
-                    <h1>POO : les interfaces</h1>
+                    <h2>POO : les interfaces</h2>
                     <pre><code data-trim contenteditable>
 interface Addable&lt;T&gt { add(b:Addable&lt;T&gt;):Addable&lt;T&gt;}
 
@@ -167,7 +167,7 @@ sum([new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
                 </section>
 
                 <section>
-                    <h1>POO : typage structurel</h1>
+                    <h2>POO : typage structurel</h2>
                     <pre><code data-trim contenteditable>
 interface Addable&lt;T&gt { add(b:Addable&lt;T&gt;):Addable&lt;T&gt;}
 
@@ -189,7 +189,7 @@ sum([new Num(1), new Num(2), new Num(3)]) // renvoit new Num(6)
                 </section>
 
                 <section>
-                    <h1>Les modules</h1>
+                    <h2>Les modules</h2>
                     <h3>Compatibilité Common JS, AMD et Ecma 6</h3>
                     <pre><code data-trim contenteditable>
 module BatTrucs {
@@ -201,7 +201,7 @@ console.log(BatTrucs.cave);
                 </section>
 
                 <section>
-                    <h1>Fonctions : syntaxe Ecma 6 - scope</h1>
+                    <h2>Fonctions : syntaxe Ecma 6 - scope</h2>
 
                     <pre><code data-trim contenteditable>
 $('#da').click(() => {
@@ -216,7 +216,7 @@ $('#da').click(function() {
                 </section>
 
                 <section>
-                    <h1>Ecma 6 : fonctions - expression</h1>
+                    <h2>Ecma 6 : fonctions - expression</h2>
 
                     <pre><code data-trim contenteditable>
 [1,2,3].map((num) => num * 2).filter((num) => num <= 4);
@@ -225,7 +225,7 @@ $('#da').click(function() {
                 </section>
 
                 <section>
-                    <h1>Ecma 6 : valeur par défaut</h1>
+                    <h2>Ecma 6 : valeur par défaut</h2>
                     <pre><code data-trim contenteditable>
 function hello(name='world') {
     console.log('hello '+name);
@@ -234,7 +234,7 @@ function hello(name='world') {
                 </section>
 
                 <section>
-                    <h1>Ecma 6 : rest parameters</h1>
+                    <h2>Ecma 6 : rest parameters</h2>
                     <pre><code data-trim contenteditable>
 var sum = function(...args:number[]) {
     return args.reduce((acc,val) => acc + val)
@@ -246,7 +246,7 @@ sum(1,2,3);//retourne 6
 
 
                 <section>
-                    <h1>Enumeration</h1>
+                    <h2>Enumeration</h2>
 
                     <pre><code data-trim contenteditable>
 enum Color {
@@ -256,7 +256,7 @@ enum Color {
                 </section>
 
                 <section>
-                    <h1>Déclaration d'ambiance</h1>
+                    <h2>Déclaration d'ambiance</h2>
 
                     <pre><code data-trim contenteditable>
 declare var $;
@@ -268,7 +268,7 @@ $('body').click(() => alert('click'));
 
 
                 <section>
-                    <h1>Fichiers de références</h1>
+                    <h2>Fichiers de références</h2>
                     <a href="https://github.com/borisyankov/DefinitelyTyped">https://github.com/borisyankov/DefinitelyTyped</a>
                     <pre><code data-trim contenteditable>
 /// &lt;reference path="jquery.d.ts" /&gt;
@@ -278,7 +278,7 @@ $('body').click(() => alert('click'));
                 </section>
 
                 <section>
-                    <h1>Outils de mise en &oelig;uvre</h1>
+                    <h2>Outils de mise en &oelig;uvre</h2>
                     <ul>
                         <li>Grunt</li>
                         <li>Les IDE JetBrains</li>
@@ -287,7 +287,7 @@ $('body').click(() => alert('click'));
                 </section>
 
                 <section>
-                    <h1>L'avenir</h1>
+                    <h2>L'avenir</h2>
                     <ul>
                         <li>Amélioration du support d'Ecma 6 (for compréhension, let, const, etc.)</li>
                         <li>Amélioration des temps de compilation</li>
